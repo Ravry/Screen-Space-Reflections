@@ -1,5 +1,22 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!114 &-9219368700404202421
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e4cb6008e19644042880ec6b575fec03, type: 3}
+  m_Name: Raymarching
+  m_EditorClassIdentifier: 
+  m_Active: 1
+  _settings:
+    material: {fileID: 2100000, guid: 67ffdb96b9760834da4839e78403caf7, type: 2}
+    rpEvent: 550
+    inScene: 1
 --- !u!114 &-1878332245247344467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -54,8 +71,8 @@ MonoBehaviour:
   m_RendererFeatures:
   - {fileID: -1878332245247344467}
   - {fileID: 7058868792153158939}
-  - {fileID: 3330659601540090351}
-  m_RendererFeatureMap: adc0de57c6d2eee51b356158c423f661ef898ad142e1382e
+  - {fileID: -9219368700404202421}
+  m_RendererFeatureMap: adc0de57c6d2eee51b356158c423f6614b840d6703390e80
   m_UseNativeRenderPass: 0
   postProcessData: {fileID: 11400000, guid: 41439944d30ece34e96484bdb6645b55, type: 2}
   xrSystemData: {fileID: 11400000, guid: 60e1133243b97e347b653163a8c01b64, type: 2}
@@ -98,29 +115,6 @@ MonoBehaviour:
   m_CopyDepthMode: 0
   m_AccurateGbufferNormals: 0
   m_IntermediateTextureMode: 1
---- !u!114 &3330659601540090351
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 0}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a864f588276bab54f97335821add48a7, type: 3}
-  m_Name: LimSSR
-  m_EditorClassIdentifier: 
-  m_Active: 0
-  Settings:
-    tracingMode: 0
-    stepStrideLength: 0.03
-    maxSteps: 128
-    downSample: 0
-    minSmoothness: 0
-    reflectSky: 1
-    ditherType: 1
-    SSR_Instance: {fileID: 0}
-    SSRShader: {fileID: 4800000, guid: 4ebe3ed37145a3344987d1b8591abaa9, type: 3}
 --- !u!114 &7058868792153158939
 MonoBehaviour:
   m_ObjectHideFlags: 0
