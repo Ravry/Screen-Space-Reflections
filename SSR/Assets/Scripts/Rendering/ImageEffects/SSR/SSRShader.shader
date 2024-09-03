@@ -11,9 +11,10 @@ Shader "CustomEffects/SSR"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/Core.hlsl"
 #include "Packages/com.unity.render-pipelines.core/Runtime/Utilities/Blit.hlsl"
 #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareNormalsTexture.hlsl"
-#include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
+// #include "Packages/com.unity.render-pipelines.universal/ShaderLibrary/DeclareDepthTexture.hlsl"
 
     uniform sampler2D _GBuffer2;
+    sampler2D _CameraDepthTexture;
 
     float _StepSize;
     int _MaxSteps;
@@ -24,14 +25,10 @@ Shader "CustomEffects/SSR"
     {
         float2 uv = input.texcoord;
         float3 color = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, uv).rgb;
-        float depthRaw = SampleSceneDepth(uv);
+        float depthRaw = tex2D(_CameraDepthTexture, uv);
         float4 gbuff = tex2D(_GBuffer2, uv);
         float smoothness = gbuff.w;
-        float3 normal = normalize(SampleSceneNormals(uv));
-
-        //[branch]
-        //if (depthRaw == 0)
-        //    return(0, 0, 0, 0);
+        float3 normal = normalize(gbuff.rgb);
 
         float4 posClipSpace = float4(uv * 2 - 1, depthRaw, 1);
         float4 posViewSpace = mul(UNITY_MATRIX_I_P, posClipSpace);
@@ -48,7 +45,7 @@ Shader "CustomEffects/SSR"
 
         float viewReflectDot = saturate(dot(viewDir, reflectionRayWorldSpace));
         float cameraViewReflectDot = saturate(dot(_WorldSpaceViewDir, reflectionRayWorldSpace));
-
+        
         float _StepSize2 = _StepSize;
 
         float thickness = _StepSize * 2;
@@ -96,7 +93,7 @@ Shader "CustomEffects/SSR"
                     break;
                 }
 
-                float sampledDepth = SampleSceneDepth(currentUV.xy);
+                float sampledDepth = tex2D(_CameraDepthTexture, currentUV.xy);
 
                 [branch]
                 if (abs(depthRaw - sampledDepth) > 0 && sampledDepth != 0)
@@ -104,7 +101,7 @@ Shader "CustomEffects/SSR"
                     float depthDelta = currentRayPosViewSpace.z - LinearEyeDepth(sampledDepth, _ZBufferParams);
 
                     [branch]
-                    if (depthDelta > 0)
+                    if (depthDelta > 0 && depthDelta < _StepSize2 * 2)
                     {
                         rayDidHit = true;
                         break;
@@ -116,7 +113,7 @@ Shader "CustomEffects/SSR"
         float3 reflectionColor = SAMPLE_TEXTURE2D(_BlitTexture, sampler_LinearClamp, currentUV.xy).rgb;
 
         return float4(rayDidHit ? lerp(color, reflectionColor, _ReflectionStrength * smoothness * edgeFade) : color, 1);
-        //return float4(normal, 1);
+        //return float4(normal.rgb, 1);
     }
 
         ENDHLSL
